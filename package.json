@@ -1,0 +1,11 @@
+{
+  "name": "ecommerce",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "concurrently \"npm run dev --prefix client\" \"npm run dev --prefix server\"", 
+    "dev": "cd client && npm run dev"   
+  },
+  "devDependencies": {
+    "concurrently": "^6.0.0"
+  }
+}
