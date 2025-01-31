@@ -18,37 +18,33 @@ import CheckAuth from "./components/common/check-auth.jsx";
 import UnauthPage from "./pages/unauth-page";
 import { useDispatch, useSelector } from "react-redux";
 import { checkAuth } from "./store/auth-slice";
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton } from "@/components/ui/skeleton";
 import { Navigate } from "react-router-dom";
-
-
 
 const App = () => {
   // const isAuthenticated = false;
   // const user = null;
 
   //.auth is reducer from store
-  const {user,isAuthenticated,isLoading}=useSelector((state)=> state.auth)
+  const { user, isAuthenticated, isLoading } = useSelector(
+    (state) => state.auth
+  );
   const dispatch = useDispatch();
 
-
   // one every page refresh it is checking auth and not logging out directly
-  useEffect(()=>{
-    dispatch(checkAuth())
-  },[dispatch])
+  useEffect(() => {
+    dispatch(checkAuth());
+  }, [dispatch]);
 
-
-  if(isLoading){
-    return <Skeleton className="w-[100px] h-[20px] rounded-full" />
-
+  if (isLoading) {
+    return <Skeleton className="w-[100px] h-[20px] rounded-full" />;
   }
 
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Navigate to="/auth/login" />
-    }
-    ,
+      element: <Navigate to="/auth/login" />,
+    },
     {
       path: "*",
       element: <NotFound />,
@@ -125,8 +121,8 @@ const App = () => {
     },
     {
       path: "/unauth-page",
-      element: <UnauthPage/>,
-    }
+      element: <UnauthPage />,
+    },
   ]);
   return <RouterProvider router={router} />;
 };

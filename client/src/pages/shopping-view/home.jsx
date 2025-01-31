@@ -39,6 +39,7 @@ const categoriesWithIcon = [
   { id: "kids", label: "Kids", icon: BabyIcon },
   { id: "accessories", label: "Accessories", icon: WatchIcon },
   { id: "footwear", label: "Footwear", icon: UmbrellaIcon },
+  { id: "Washroom", label: "Washroom", icon: UmbrellaIcon },
 ];
 
 const brandsWithIcon = [
@@ -48,6 +49,7 @@ const brandsWithIcon = [
   { id: "levi", label: "Levi's", icon: Airplay },
   { id: "zara", label: "Zara", icon: Images },
   { id: "h&m", label: "H&M", icon: Heater },
+  { id: "Tuff", label: "Tuff", icon: Heater },
 ];
 
 const ShoppingHome = () => {
@@ -222,8 +224,6 @@ const ShoppingHome = () => {
           </div>
         </div>
       </section>
-
-      
 
       <ProductDetailsDialog
         open={openDetailsDialog}

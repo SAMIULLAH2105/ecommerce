@@ -178,7 +178,10 @@ const updateCartItemQty = async (req, res) => {
 
 const deleteCartItem = async (req, res) => {
   try {
+
+
     const { userId, productId } = req.params;
+    
     if (!userId || !productId) {
       return res.status(400).json({
         success: false,

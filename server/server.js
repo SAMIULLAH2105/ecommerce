@@ -4,10 +4,9 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const authRouter = require("./routes/auth/auth-routes");
 const adminProductsRouter = require("./routes/admin/products-routes");
-const shopProductRouter = require('./routes/shop/products-route');
-const shopCartRouter = require('./routes/shop/cart-routes'); 
-const shopAddressRouter = require('./routes/shop/address-routes'); 
-
+const shopProductRouter = require("./routes/shop/products-route");
+const shopCartRouter = require("./routes/shop/cart-routes");
+const shopAddressRouter = require("./routes/shop/address-routes");
 
 mongoose
   .connect(

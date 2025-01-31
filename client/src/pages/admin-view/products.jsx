@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet } from "@/components/ui/sheet";
 import { SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { addProductFormElements } from "@/config";
+import swal from "sweetalert";
 // import { useToast } from "@/hooks/use-toast";
 
 import { useToast } from "@/hooks/use-toast";
@@ -12,7 +13,7 @@ import {
   addNewProduct,
   editProduct,
   fetchAllProducts,
-  deleteProduct
+  deleteProduct,
 } from "@/store/admin/product-slice";
 import { Key } from "lucide-react";
 import React, { Fragment, useEffect, useState } from "react";
@@ -82,13 +83,15 @@ function AdminProducts() {
   }
 
   function handleDelete(getCurrentProductId) {
-    dispatch(deleteProduct(getCurrentProductId)).then((data) => {
-      if (data?.payload?.success) {
-        dispatch(fetchAllProducts());
-      }
-    });
-    // console.log(`Deleted ${getCurrentProductId}`);
-    
+    if (window.confirm("Are you sure you want to delete this product?")) {
+      dispatch(deleteProduct(getCurrentProductId)).then((data) => {
+        if (data?.payload?.success) {
+          swal("Hurrah!", "Successfully done");
+          dispatch(fetchAllProducts());
+        }
+      });
+      // console.log(`Deleted ${getCurrentProductId}`);
+    }
   }
 
   function isFormValid() {

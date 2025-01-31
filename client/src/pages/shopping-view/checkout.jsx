@@ -60,9 +60,7 @@ const ShoppingCheckout = () => {
           </div>
 
           <div className="mt-4 w-full">
-            <Button className="w-full">
-              Checkout With easypaisa
-            </Button>
+            <Button className="w-full">Checkout With easypaisa</Button>
           </div>
         </div>
       </div>
