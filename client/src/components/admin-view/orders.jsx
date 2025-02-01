@@ -11,10 +11,18 @@ import {
 } from "../ui/table";
 import { useState } from "react";
 import AdminOrderDetailsView from "./order-details";
+// import {dispatch} from "Dispatch"
 
 const AdminOrdersView = () => {
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   return (
+
+<>
+    <div>
+{
+  
+}
+    </div>
     <Card>
       <CardHeader>
         <CardTitle>All Orders</CardTitle>
@@ -56,6 +64,7 @@ const AdminOrdersView = () => {
         </Table>
       </CardContent>
     </Card>
+    </>
   );
 };
 

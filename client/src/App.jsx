@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { checkAuth } from "./store/auth-slice";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Navigate } from "react-router-dom";
+import PaymentSuccessPage from "./pages/shopping-view/payment-success";
 
 const App = () => {
   // const isAuthenticated = false;
@@ -116,6 +117,10 @@ const App = () => {
         {
           path: "listing",
           element: <ShoppingListing />,
+        },
+        {
+          path: "payment-success",
+          element: <PaymentSuccessPage />,
         },
       ],
     },
