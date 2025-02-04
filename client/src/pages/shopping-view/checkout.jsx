@@ -5,7 +5,7 @@ import { useToast } from "@/hooks/use-toast"; // Adjust this import if necessary
 import img from "../../assets/account.jpg"; // Path to your image
 import Address from "@/components/shopping-view/address"; // Path to Address component
 import UserCartItemsContent from "@/components/shopping-view/cart-items-content"; // Path to Cart Items Content
-import { createNewOrder } from "@/store/shop/order-slice"; // Your redux action for creating a new order
+import { capturePayment, createNewOrder } from "@/store/shop/order-slice"; // Your redux action for creating a new order
 
 // Stripe-related imports
 import {
@@ -122,6 +122,8 @@ const ShoppingCheckout = () => {
             title: "Payment successful",
             variant: "success",
           });
+          
+
           window.location.href = "/shop/payment-success";
 
           // You can redirect the user to a confirmation page or handle further logic

@@ -6,14 +6,18 @@ import AdminProductsSlice from "./admin/product-slice";
 import shoppingProductSlice from "./shop/products-slice";
 import shopCartSlice from "./shop/cart-slice";
 import shopAddressSlice from "./shop/address-slice";
+import shoppingOrderSlice from "./shop/order-slice";
+import adminOrderSlice from "./admin/order-slice";
 
 const store = configureStore({
   reducer: {
     auth: authReducer,
     adminProducts: AdminProductsSlice,
+    adminOrder:adminOrderSlice,
     shopProducts: shoppingProductSlice,
     shopCart: shopCartSlice,
     shopAddress: shopAddressSlice,
+    shopOrder: shoppingOrderSlice,
   },
 });
 

@@ -40,6 +40,7 @@ const createOrder = async (req, res) => {
       email: userEmail, // Use the user's email
       metadata: { userId }, // Store the userId in metadata
     });
+
     const customerId = customer.id;
     // Create a Stripe Payment Intent with the customer ID
     const paymentIntent = await stripe.paymentIntents.create({
@@ -65,6 +66,7 @@ const createOrder = async (req, res) => {
       orderDate,
       orderUpdateDate,
       paymentId: paymentIntent.id,
+      payerId: customerId,
     });
 
     await newlyCreatedOrder.save();
@@ -75,7 +77,7 @@ const createOrder = async (req, res) => {
       orderId: newlyCreatedOrder._id,
       paymentIntent: paymentIntent,
       user,
-      customerId
+      customerId,
     });
   } catch (e) {
     console.log(e);
@@ -86,31 +88,139 @@ const createOrder = async (req, res) => {
   }
 };
 
-// Capture Payment and Confirm Order
-const capturePayment = async (req, res) => {
-  let { paymentIntentId } = req.body;
-
-  // Extract the PaymentIntent ID if a client secret is passed
-  if (paymentIntentId.includes("_secret")) {
-    paymentIntentId = paymentIntentId.split("_secret")[0];
-  }
-
+const newTest = async (req, res) => {
   try {
-    // Capture the payment using the paymentIntentId
-    const paymentIntent = await stripe.paymentIntents.capture(paymentIntentId);
-    res
-      .status(200)
-      .json({ message: "Payment captured successfully", paymentIntent });
+    const { name, value } = req.body;
+
+    if (!name || !value) {
+      return res.status(400).json({ message: "Name and value are required." });
+    }
+
+    // Simulate some processing logic
+    const result = {
+      message: "Data processed successfully",
+      data: {
+        name: name.toUpperCase(),
+        value: value * 2,
+        timestamp: new Date().toISOString(),
+      },
+    };
+
+    return res.status(201).json(result);
   } catch (error) {
-    console.error("Error capturing PaymentIntent:", error);
-    res.status(500).json({ error: error.message });
+    console.error("Error in newTest controller:", error);
+    return res.status(500).json({ message: "Internal server error." });
   }
 };
 
+// Update Order-Status and product-quantity after capturing Payment
+const capturePayment = async (req, res) => {
+  try {
+    const { orderId } = req.body;
+
+    let order = await Order.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order can not be found",
+      });
+    }
+
+    order.paymentStatus = "paid";
+    order.orderStatus = "confirmed";
+
+    for (let item of order.cartItems) {
+      let product = await Product.findById(item.productId);
+
+      if (!product) {
+        return res.status(404).json({
+          success: false,
+          message: `Not enough stock for this product ${product.title}`,
+        });
+      }
+
+      product.totalStock -= item.quantity;
+
+      await product.save();
+    }
+
+    // const getCartId = order.cartId;
+    // await Cart.findByIdAndDelete(getCartId);
+
+    await order.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Order confirmed",
+      data: order,
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({
+      success: false,
+      message: "Some error occured!",
+    });
+  }
+};
+
+const getAllOrdersByUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const orders = await Order.find({ userId });
+
+    if (!orders.length) {
+      return res.status(404).json({
+        success: false,
+        message: "No orders found!",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: orders,
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({
+      success: false,
+      message: "Some error occured!",
+    });
+  }
+};
+
+const getOrderDetails = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const order = await Order.findById(id);
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found!",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: order,
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({
+      success: false,
+      message: "Some error occured!",
+    });
+  }
+};
 module.exports = {
   createOrder,
-  // confirmPayment,
   capturePayment,
+  getAllOrdersByUser,
+  getOrderDetails,
+  newTest,
 };
 
 const a = 7;
