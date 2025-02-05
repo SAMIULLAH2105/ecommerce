@@ -28,6 +28,7 @@ function UserCartItemsContent({ cartItem }) {
         console.log(getCurrentProductIndex, getTotalStock, "getTotalStock");
 
         if (indexOfCurrentCartItem > -1) {
+          // below one is selected quantity from cart
           const getQuantity = getCartItems[indexOfCurrentCartItem].quantity;
           if (getQuantity + 1 > getTotalStock) {
             toast({

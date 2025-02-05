@@ -21,6 +21,7 @@ import { checkAuth } from "./store/auth-slice";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Navigate } from "react-router-dom";
 import PaymentSuccessPage from "./pages/shopping-view/payment-success";
+import SearchProducts from "./pages/shopping-view/search";
 
 const App = () => {
   // const isAuthenticated = false;
@@ -117,6 +118,10 @@ const App = () => {
         {
           path: "listing",
           element: <ShoppingListing />,
+        },
+        {
+          path: "search",
+          element: <SearchProducts/>,
         },
         {
           path: "payment-success",

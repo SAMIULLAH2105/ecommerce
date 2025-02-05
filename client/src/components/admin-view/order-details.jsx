@@ -121,6 +121,7 @@ function AdminOrderDetailsView({ orderDetails }) {
               {
                 label: "Order Status",
                 name: "status",
+                placeholder: "Order Status",
                 componentType: "select",
                 options: [
                   { id: "pending", label: "Pending" },

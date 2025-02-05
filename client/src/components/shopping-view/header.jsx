@@ -1,6 +1,11 @@
 import { House, LogOut, Menu, ShoppingCart, User } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,23 +26,32 @@ import UserCartWrapper from "./cart-wrapper";
 import { fetchCartItems } from "@/store/shop/cart-slice";
 
 function MenuItems() {
+  // below will give us the path name
   const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   function handleNavigate(getCurrentMenuItem) {
     console.log("inside log");
 
     sessionStorage.removeItem("filters");
     const currentFilter =
-      getCurrentMenuItem !== "home"
+      getCurrentMenuItem !== "home" && getCurrentMenuItem.id !== "products"  && getCurrentMenuItem.id !== "search"
         ? {
             category: [getCurrentMenuItem.id],
           }
         : null;
 
-    console.log(getCurrentMenuItem.id);
+    // console.log(getCurrentMenuItem.id);
+    // when click product in header id products,when id is home or product we will not have any filters.
 
     sessionStorage.setItem("filters", JSON.stringify(currentFilter));
-    navigate(getCurrentMenuItem.path);
+
+    location.pathname.includes("listing") && currentFilter !== null
+      ? setSearchParams(
+          new URLSearchParams(`?category=${getCurrentMenuItem.id}`)
+        )
+      : navigate(getCurrentMenuItem.path);
   }
 
   return (

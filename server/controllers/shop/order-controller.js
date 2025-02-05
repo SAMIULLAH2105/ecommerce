@@ -145,8 +145,8 @@ const capturePayment = async (req, res) => {
       await product.save();
     }
 
-    // const getCartId = order.cartId;
-    // await Cart.findByIdAndDelete(getCartId);
+    const getCartId = order.cartId;
+    await Cart.findByIdAndDelete(getCartId);
 
     await order.save();
 
