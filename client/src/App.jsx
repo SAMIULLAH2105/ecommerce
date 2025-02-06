@@ -24,10 +24,6 @@ import PaymentSuccessPage from "./pages/shopping-view/payment-success";
 import SearchProducts from "./pages/shopping-view/search";
 
 const App = () => {
-  // const isAuthenticated = false;
-  // const user = null;
-
-  //.auth is reducer from store
   const { user, isAuthenticated, isLoading } = useSelector(
     (state) => state.auth
   );
@@ -45,7 +41,10 @@ const App = () => {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Navigate to="/auth/login" />,
+      // element: <Navigate to="/auth/login" />,
+      element: (
+        <CheckAuth isAuthenticated={isAuthenticated} user={user}></CheckAuth>
+      ),
     },
     {
       path: "*",
@@ -121,7 +120,7 @@ const App = () => {
         },
         {
           path: "search",
-          element: <SearchProducts/>,
+          element: <SearchProducts />,
         },
         {
           path: "payment-success",

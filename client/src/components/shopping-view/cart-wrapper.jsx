@@ -12,8 +12,8 @@ const UserCartWrapper = ({ cartItems, setOpenCartSheet }) => {
       ? cartItems.reduce(
           (sum, currentItem) =>
             sum +
-            (currentItem?.salesPrice > 0
-              ? currentItem?.salesPrice
+            (currentItem?.salePrice > 0
+              ? currentItem?.salePrice
               : currentItem?.price) *
               currentItem?.quantity,
           0

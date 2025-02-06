@@ -1,12 +1,23 @@
 import React from "react";
-import { useLocation , Navigate} from "react-router-dom";
-
+import { useLocation, Navigate } from "react-router-dom";
 
 // children is component we want to render
 // use location will you current path url (/auth, /admin)
-const CheckAuth = ({isAuthenticated, user, children}) => {
+const CheckAuth = ({ isAuthenticated, user, children }) => {
   const location = useLocation();
-  
+
+  if (location.pathname === "/") {
+    if (!isAuthenticated) {
+      return <Navigate to="/auth/login" />;
+    } else {
+      if (user?.role == "admin") {
+        return <Navigate to="/admin/dashboard" />;
+      } else {
+        return <Navigate to="/shop/home" />;
+      }
+    }
+  }
+
   if (
     !isAuthenticated &&
     !(
