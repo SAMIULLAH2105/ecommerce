@@ -1,5 +1,4 @@
-import { House, LogOut, Menu, ShoppingCart, User } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { HousePlug, LogOut, Menu, ShoppingCart, UserCog } from "lucide-react";
 import {
   Link,
   useLocation,
@@ -9,8 +8,6 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
-
-import { Label } from "../ui/label";
 import { shoppingViewHeaderMenuItems } from "@/config";
 import {
   DropdownMenu,
@@ -23,27 +20,25 @@ import {
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { logoutUser } from "@/store/auth-slice";
 import UserCartWrapper from "./cart-wrapper";
+import { useEffect, useState } from "react";
 import { fetchCartItems } from "@/store/shop/cart-slice";
+import { Label } from "../ui/label";
 
 function MenuItems() {
-  // below will give us the path name
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
 
   function handleNavigate(getCurrentMenuItem) {
-    console.log("inside log");
-
     sessionStorage.removeItem("filters");
     const currentFilter =
-      getCurrentMenuItem !== "home" && getCurrentMenuItem.id !== "products"  && getCurrentMenuItem.id !== "search"
+      getCurrentMenuItem.id !== "home" &&
+      getCurrentMenuItem.id !== "products" &&
+      getCurrentMenuItem.id !== "search"
         ? {
             category: [getCurrentMenuItem.id],
           }
         : null;
-
-    // console.log(getCurrentMenuItem.id);
-    // when click product in header id products,when id is home or product we will not have any filters.
 
     sessionStorage.setItem("filters", JSON.stringify(currentFilter));
 
@@ -58,11 +53,10 @@ function MenuItems() {
     <nav className="flex flex-col mb-3 lg:mb-0 lg:items-center gap-6 lg:flex-row">
       {shoppingViewHeaderMenuItems.map((menuItem) => (
         <Label
+          onClick={() => handleNavigate(menuItem)}
           className="text-sm font-medium cursor-pointer"
           key={menuItem.id}
-          onClick={() => handleNavigate(menuItem)}
         >
-          {" "}
           {menuItem.label}
         </Label>
       ))}
@@ -72,9 +66,8 @@ function MenuItems() {
 
 function HeaderRightContent() {
   const { user } = useSelector((state) => state.auth);
-  const [openCartSheet, setOpenCartSheet] = useState(false);
-
   const { cartItems } = useSelector((state) => state.shopCart);
+  const [openCartSheet, setOpenCartSheet] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -86,6 +79,8 @@ function HeaderRightContent() {
     dispatch(fetchCartItems(user?.id));
   }, [dispatch]);
 
+  console.log(cartItems, "sangam");
+
   return (
     <div className="flex lg:items-center lg:flex-row flex-col gap-4">
       <Sheet open={openCartSheet} onOpenChange={() => setOpenCartSheet(false)}>
@@ -96,8 +91,10 @@ function HeaderRightContent() {
           className="relative"
         >
           <ShoppingCart className="w-6 h-6" />
-          <span className="absolute top-[-5px] right-[2px] font-bold text-sm">{cartItems.items.length || 0}</span>
-          <span className="sr-only">User Cart</span>
+          <span className="absolute top-[-5px] right-[2px] font-bold text-sm">
+            {cartItems?.items?.length || 0}
+          </span>
+          <span className="sr-only">User cart</span>
         </Button>
         <UserCartWrapper
           setOpenCartSheet={setOpenCartSheet}
@@ -117,39 +114,34 @@ function HeaderRightContent() {
             </AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
-
-        <DropdownMenuContent className="w-56" side="right">
+        <DropdownMenuContent side="right" className="w-56">
           <DropdownMenuLabel>Logged in as {user?.userName}</DropdownMenuLabel>
           <DropdownMenuSeparator />
-
           <DropdownMenuItem onClick={() => navigate("/shop/account")}>
-            <User className="mr-2 h-4 w-4" />
+            <UserCog className="mr-2 h-4 w-4" />
             Account
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-
           <DropdownMenuItem onClick={handleLogout}>
             <LogOut className="mr-2 h-4 w-4" />
-            LogOut
+            Logout
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
   );
 }
 
-const ShoppingHeader = () => {
+function ShoppingHeader() {
   const { isAuthenticated } = useSelector((state) => state.auth);
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background">
       <div className="flex h-16 items-center justify-between px-4 md:px-6">
         <Link to="/shop/home" className="flex items-center gap-2">
-          <House className="h-6 w-6" />
-          <span className="font-bold">Vibe Cart</span>
+          <HousePlug className="h-6 w-6" />
+          <span className="font-bold">Ecommerce</span>
         </Link>
-        {/* For Smaller Devices */}
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="outline" size="icon" className="lg:hidden">
@@ -157,14 +149,11 @@ const ShoppingHeader = () => {
               <span className="sr-only">Toggle header menu</span>
             </Button>
           </SheetTrigger>
-
           <SheetContent side="left" className="w-full max-w-xs">
             <MenuItems />
             <HeaderRightContent />
           </SheetContent>
         </Sheet>
-
-        {/* For Larger Devices */}
         <div className="hidden lg:block">
           <MenuItems />
         </div>
@@ -175,6 +164,6 @@ const ShoppingHeader = () => {
       </div>
     </header>
   );
-};
+}
 
 export default ShoppingHeader;
