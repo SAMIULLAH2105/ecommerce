@@ -20,6 +20,19 @@ export const registerUser = createAsyncThunk(
     return response.data;
   }
 );
+export const registerUserWithOAuth = createAsyncThunk(
+  "auth/registerUserWithOAuth",  // More descriptive action type
+  async (formData) => {
+    const response = await axios.post(
+      "http://localhost:5000/api/auth/register",
+      formData,
+      {
+        withCredentials: true,
+      }
+    );
+    return response.data;
+  }
+);
 
 export const loginUser = createAsyncThunk(
   "auth/login",  // More descriptive action type

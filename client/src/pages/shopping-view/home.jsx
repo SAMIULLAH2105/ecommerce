@@ -130,7 +130,8 @@ const ShoppingHome = () => {
   useEffect(() => {
     if (productDetails !== null) setOpenDetailsDialog(true);
   }, [productDetails]);
-
+  console.log(featureImageList);
+  
   return (
     <div className="flex flex-col min-h-screen ">
       <div className="relative e-full h-[600px] overflow-hidden">

@@ -1,8 +1,10 @@
 import React from "react";
 import { Input } from "../ui/input";
+import { Eye, EyeOff } from "lucide-react";
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
+import { useState } from "react";
 import {
   Select,
   SelectContent,
@@ -18,8 +20,10 @@ const CommonForm = ({
   setFormData,
   onSubmit,
   buttonText,
-  isBtnDisabled
+  isBtnDisabled,
 }) => {
+  const [showPassword, setShowPassword] = useState({});
+
   function renderInputByComponentType(getControlItem) {
     let element = null;
     const value = formData[getControlItem.name] || "";
@@ -27,27 +31,55 @@ const CommonForm = ({
     switch (getControlItem.componentType) {
       case "input":
         element = (
-          <Input
-            name={getControlItem.name}
-            placeholder={getControlItem.placeholder}
-            id={getControlItem.name}
-            type={getControlItem.type}
-            value={value}
-            //  It copies all existing key-value pairs from the current formData state object into the new object being created. [getControlItem.name]: event.target.value dynamically sets the key in the form data based on the input field's name
-
-            onChange={(event) =>
-              setFormData({
-                ...formData,
-                [getControlItem.name]: event.target.value,
-              })
-            }
-          />
+          <div className="relative">
+            <Input
+              name={getControlItem.name}
+              placeholder={getControlItem.placeholder}
+              id={getControlItem.name}
+              type={
+                getControlItem.type === "password" &&
+                showPassword[getControlItem.name]
+                  ? "text"
+                  : getControlItem.type
+              }
+              value={value}
+              onChange={(event) =>
+                setFormData({
+                  ...formData,
+                  [getControlItem.name]: event.target.value,
+                })
+              }
+            />
+            {getControlItem.type === "password" && (
+              <button
+                type="button"
+                className="absolute right-3 top-3 text-gray-500"
+                onClick={() =>
+                  setShowPassword((prev) => ({
+                    ...prev,
+                    [getControlItem.name]: !prev[getControlItem.name],
+                  }))
+                }
+              >
+                {showPassword[getControlItem.name] ? (
+                  <EyeOff size={20} />
+                ) : (
+                  <Eye size={20} />
+                )}
+              </button>
+            )}
+          </div>
         );
         break;
 
       case "select":
         element = (
-          <Select onValueChange={(value) => setFormData({...formData,[getControlItem.name]: value})} value={value}>
+          <Select
+            onValueChange={(value) =>
+              setFormData({ ...formData, [getControlItem.name]: value })
+            }
+            value={value}
+          >
             <SelectTrigger className="w-full">
               <SelectValue placeholder={getControlItem.placeholder} />
             </SelectTrigger>
@@ -102,8 +134,6 @@ const CommonForm = ({
   }
 
   return (
-    
-
     <form onSubmit={onSubmit}>
       <div className="flex flex-col gap-3">
         {formControls.map((ControlItem) => (
@@ -114,11 +144,21 @@ const CommonForm = ({
         ))}
       </div>
 
-      <Button disabled={isBtnDisabled} type="submit" className="mt-2 w-full">
+      {/* <Button disabled={isBtnDisabled} type="submit" className="mt-2 w-full">
+        {buttonText || "Submit"}
+      </Button> */}
+      <Button
+        disabled={isBtnDisabled}
+        type="submit"
+        className={`mt-2 w-full ${
+          ["Login", "Sign Up"].includes(buttonText)
+            ? "bg-gradient-to-r from-purple-700 to-indigo-800 text-white"
+            : "bg-black text-white"
+        }`}
+      >
         {buttonText || "Submit"}
       </Button>
     </form>
-    
   );
 };
 

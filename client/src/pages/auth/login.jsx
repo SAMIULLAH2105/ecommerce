@@ -14,23 +14,25 @@ const initialState = {
 const AuthLogin = () => {
   const [formData, setFormData] = useState(initialState);
   const dispatch = useDispatch();
-  const {toast} = useToast();
+  const { toast } = useToast();
 
   function onSubmit(event) {
     event.preventDefault();
     dispatch(loginUser(formData)).then((data) => {
-      if(data?.payload?.success){
-          toast({
-            title:data?.payload?.message
-          })
-      }else{
+      if (data?.payload?.success) {
         toast({
-          title:data?.payload?.message
-        })
+          title: data?.payload?.message,
+        });
+      } else {
+        toast({
+          title: data?.payload?.message,
+        });
       }
     });
   }
-
+  // const handleOAuthLogin = (provider) => {
+  //   window.location.href = `http://localhost:5000/api/auth/${provider}`;
+  // };
   return (
     <div className="mx-auto w-full max-w-md space-y-6">
       <div className="text-center">
@@ -54,6 +56,14 @@ const AuthLogin = () => {
         setFormData={setFormData}
         onSubmit={onSubmit}
       />
+      {/* <div className="flex flex-col space-y-2">
+        <button
+          className="btn btn-outline"
+          onClick={() => handleOAuthLogin("google")}
+        >
+          Sign in with Google
+        </button>
+      </div> */}
     </div>
   );
 };

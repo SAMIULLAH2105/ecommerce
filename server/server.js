@@ -2,6 +2,12 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+// For OAuth
+const session = require("express-session");
+const passport = require("passport");
+require("./Helpers/passport");
+
+// Routers
 const authRouter = require("./routes/auth/auth-routes");
 const adminProductsRouter = require("./routes/admin/products-routes");
 const adminOrderRouter = require("./routes/admin/order-routes");
@@ -15,12 +21,15 @@ const shopSearchRouter = require("./routes/shop/search-routes");
 const shopReviewRouter = require("./routes/shop/review-routes");
 const commonFeatureRouter = require("./routes/common/feature-routes");
 
+// const authRouter = require("./routes/auth/auth-routes");
+
 mongoose
   .connect(
     "mongodb+srv://samiullah21january:samiullah21january123@cluster0.vma0t.mongodb.net/"
   )
   .then(() => console.log(`Mongodb connected `))
   .catch((err) => console.log(`Error`, err));
+
 // creating db connnection
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -39,6 +48,19 @@ app.use(
     credentials: true,
   })
 );
+app.use(
+  session({
+    secret: "YOUR_SESSION_SECRET",
+    resave: false,
+    saveUninitialized: false, // Make sure it's false to avoid unnecessary session storage
+    cookie: { secure: false }, // Change to true if using HTTPS
+  })
+);
+
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(cookieParser());
 app.use(express.json());
 app.use("/api/auth", authRouter);

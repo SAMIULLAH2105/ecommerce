@@ -1,16 +1,15 @@
-import React from "react";
-import { useLocation, Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 
-// children is component we want to render
-// use location will you current path url (/auth, /admin)
-const CheckAuth = ({ isAuthenticated, user, children }) => {
+function CheckAuth({ isAuthenticated, user, children }) {
   const location = useLocation();
+
+  console.log(location.pathname, isAuthenticated);
 
   if (location.pathname === "/") {
     if (!isAuthenticated) {
       return <Navigate to="/auth/login" />;
     } else {
-      if (user?.role == "admin") {
+      if (user?.role === "admin") {
         return <Navigate to="/admin/dashboard" />;
       } else {
         return <Navigate to="/shop/home" />;
@@ -33,7 +32,7 @@ const CheckAuth = ({ isAuthenticated, user, children }) => {
     (location.pathname.includes("/login") ||
       location.pathname.includes("/register"))
   ) {
-    if (user?.role == "admin") {
+    if (user?.role === "admin") {
       return <Navigate to="/admin/dashboard" />;
     } else {
       return <Navigate to="/shop/home" />;
@@ -57,6 +56,68 @@ const CheckAuth = ({ isAuthenticated, user, children }) => {
   }
 
   return <>{children}</>;
-};
+}
 
 export default CheckAuth;
+// import React from "react";
+// import { useLocation, Navigate } from "react-router-dom";
+
+// // children is component we want to render
+// // use location will you current path url (/auth, /admin)
+// const CheckAuth = ({ isAuthenticated, user, children }) => {
+//   const location = useLocation();
+
+//   if (location.pathname === "/") {
+//     if (!isAuthenticated) {
+//       return <Navigate to="/auth/login" />;
+//     } else {
+//       if (user?.role == "admin") {
+//         return <Navigate to="/admin/dashboard" />;
+//       } else {
+//         return <Navigate to="/shop/home" />;
+//       }
+//     }
+//   }
+
+//   if (
+//     !isAuthenticated &&
+//     !(
+//       location.pathname.includes("/login") ||
+//       location.pathname.includes("/register")
+//     )
+//   ) {
+//     return <Navigate to="/auth/login" />;
+//   }
+
+//   if (
+//     isAuthenticated &&
+//     (location.pathname.includes("/login") ||
+//       location.pathname.includes("/register"))
+//   ) {
+//     if (user?.role == "admin") {
+//       return <Navigate to="/admin/dashboard" />;
+//     } else {
+//       return <Navigate to="/shop/home" />;
+//     }
+//   }
+
+//   if (
+//     isAuthenticated &&
+//     user?.role !== "admin" &&
+//     location.pathname.includes("admin")
+//   ) {
+//     return <Navigate to="/unauth-page" />;
+//   }
+
+//   if (
+//     isAuthenticated &&
+//     user?.role === "admin" &&
+//     location.pathname.includes("shop")
+//   ) {
+//     return <Navigate to="/admin/dashboard" />;
+//   }
+
+//   return <>{children}</>;
+// };
+
+// export default CheckAuth;

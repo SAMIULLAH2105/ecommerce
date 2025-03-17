@@ -1,6 +1,4 @@
-// import mongoose, { Mongoose } from "mongoose";
 const mongoose = require("mongoose");
-const { Mongoose } = require("mongoose");
 
 const UserSchema = new mongoose.Schema({
   userName: {
@@ -15,12 +13,18 @@ const UserSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
-    unique: true,
+    required: function () {
+      return !this.googleId; // If googleId exists, password is not required
+    },
   },
   role: {
     type: String,
     default: "user",
+  },
+  googleId: {
+    type: String,
+    unique: true,
+    sparse: true, // Allows multiple null values for googleId
   },
 });
 

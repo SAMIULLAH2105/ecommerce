@@ -67,6 +67,7 @@ const loginUser = async (req, res) => {
     }
 
     const matchPassword = await bcrypt.compare(password, findUser.password);
+    
     if (!matchPassword) {
       return res.json({
         success: false,
@@ -110,6 +111,7 @@ const logoutUser = async (req, res) => {
       success: true,
       message: "User Logged Out Successfully",
     });
+    req.session.destroy();
   } catch (e) {
     console.log(e);
   }
