@@ -13,7 +13,18 @@ export const createNewOrder = createAsyncThunk(
   "/order/createNewOrder",
   async (orderData) => {
     const response = await axios.post(
-      "http://localhost:5000/api/shop/order/create",
+      `${import.meta.env.VITE_API_URL}/api/shop/order/create`,
+      orderData
+    );
+
+    return response.data;
+  }
+);
+export const createNewOrderWithCOD = createAsyncThunk(
+  "/order/createNewOrderWithCOD",
+  async (orderData) => {
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_URL}/api/shop/order/create-cod`,
       orderData
     );
 
@@ -25,7 +36,7 @@ export const capturePayment = createAsyncThunk(
   "/order/capturePayment",
   async (orderId) => {
     const response = await axios.post(
-      "http://localhost:5000/api/shop/order/capture",
+      `${import.meta.env.VITE_API_URL}/api/shop/order/capture`,
       {
         orderId,
       }
@@ -38,7 +49,7 @@ export const newTest = createAsyncThunk(
   "/order/capturePayment",
   async ({ orderId }) => {
     const response = await axios.post(
-      "http://localhost:5000/api/shop/order/testing",
+      `${import.meta.env.VITE_API_URL}/api/shop/order/testing`,
       {
         orderId,
       }
@@ -52,7 +63,7 @@ export const getAllOrdersByUserId = createAsyncThunk(
   "/order/getAllOrdersByUserId",
   async (userId) => {
     const response = await axios.get(
-      `http://localhost:5000/api/shop/order/list/${userId}`
+      `${import.meta.env.VITE_API_URL}/api/shop/order/list/${userId}`
     );
 
     return response.data;
@@ -63,7 +74,7 @@ export const getOrderDetails = createAsyncThunk(
   "/order/getOrderDetails",
   async (id) => {
     const response = await axios.get(
-      `http://localhost:5000/api/shop/order/details/${id}`
+      `${import.meta.env.VITE_API_URL}/api/shop/order/details/${id}`
     );
 
     return response.data;
@@ -93,6 +104,23 @@ const shoppingOrderSlice = createSlice({
         );
       })
       .addCase(createNewOrder.rejected, (state) => {
+        state.isLoading = false;
+        state.approvalURL = null;
+        state.orderId = null;
+      })
+      .addCase(createNewOrderWithCOD.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createNewOrderWithCOD.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.approvalURL = "";
+        state.orderId = action.payload.orderId;
+        sessionStorage.setItem(
+          "currentOrderId",
+          JSON.stringify(action.payload.orderId)
+        );
+      })
+      .addCase(createNewOrderWithCOD.rejected, (state) => {
         state.isLoading = false;
         state.approvalURL = null;
         state.orderId = null;

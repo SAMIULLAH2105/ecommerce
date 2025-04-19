@@ -5,7 +5,10 @@ import { useToast } from "@/hooks/use-toast"; // Adjust this import if necessary
 import img from "../../assets/account.jpg"; // Path to your image
 import Address from "@/components/shopping-view/address"; // Path to Address component
 import UserCartItemsContent from "@/components/shopping-view/cart-items-content"; // Path to Cart Items Content
-import { createNewOrder } from "@/store/shop/order-slice"; // Your redux action for creating a new order
+import {
+  createNewOrder,
+  createNewOrderWithCOD,
+} from "@/store/shop/order-slice"; // Your redux action for creating a new order
 import {
   Dialog,
   DialogContent,
@@ -148,6 +151,80 @@ const ShoppingCheckout = () => {
       setIsPaymemntStart(false);
     }
   };
+  const handleCashOnDelivery = async () => {
+    if (cartItems.length === 0) {
+      toast({
+        title: "Your cart is empty. Please add items to proceed",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (currentSelectedAddress === null) {
+      toast({
+        title: "Please select one address to proceed.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const orderData = {
+      userId: user?.id,
+      cartId: cartItems?._id,
+      cartItems: cartItems.items.map((singleCartItem) => ({
+        productId: singleCartItem?.productId,
+        title: singleCartItem?.title,
+        image: singleCartItem?.image,
+        price:
+          singleCartItem?.salePrice > 0
+            ? singleCartItem?.salePrice
+            : singleCartItem?.price,
+        quantity: singleCartItem?.quantity,
+      })),
+      addressInfo: {
+        addressId: currentSelectedAddress?._id,
+        address: currentSelectedAddress?.address,
+        city: currentSelectedAddress?.city,
+        pincode: currentSelectedAddress?.pincode,
+        phone: currentSelectedAddress?.phone,
+        notes: currentSelectedAddress?.notes,
+      },
+      orderStatus: "pending",
+      paymentMethod: "COD",
+      paymentStatus: "pending",
+      totalAmount: totalCartAmount,
+      orderDate: new Date(),
+      orderUpdateDate: new Date(),
+      paymentId: "",
+      payerId: "",
+    };
+
+    try {
+      const response = await dispatch(createNewOrderWithCOD(orderData));
+      if (response?.payload?.success) {
+        toast({
+          title: "Order placed successfully",
+          variant: "success",
+        });
+
+        setTimeout(() => {
+          window.location.href = "/shop/account";
+        }, 3000);
+      } else {
+        toast({
+          title: "Order placement failed",
+          description: error.message,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "An error occurred",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <div className="flex flex-col">
@@ -215,7 +292,7 @@ const ShoppingCheckout = () => {
                     <Button
                       onClick={() => {
                         setOpen(false);
-                        
+                        handleCashOnDelivery();
                       }}
                     >
                       Proceed

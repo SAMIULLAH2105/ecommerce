@@ -30,9 +30,7 @@ const AuthLogin = () => {
       }
     });
   }
-  // const handleOAuthLogin = (provider) => {
-  //   window.location.href = `http://localhost:5000/api/auth/${provider}`;
-  // };
+
   return (
     <div className="mx-auto w-full max-w-md space-y-6">
       <div className="text-center">

@@ -111,7 +111,7 @@ const logoutUser = async (req, res) => {
       success: true,
       message: "User Logged Out Successfully",
     });
-    req.session.destroy();
+   
   } catch (e) {
     console.log(e);
   }

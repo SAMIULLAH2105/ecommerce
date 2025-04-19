@@ -10,7 +10,7 @@ export const removeFeatureImage = createAsyncThunk(
   "/feature/removeFeatureImage",
   async (id) => {
     const response = await axios.delete(
-      `http://localhost:5000/api/admin/feature/remove/${id}`
+      `${import.meta.env.VITE_API_URL}/api/admin/feature/remove/${id}`
     );
 
     return response.data;
